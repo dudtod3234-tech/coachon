@@ -1,0 +1,21 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>코치온 · 주소 연결</title></head>
+<body style="margin:0;background:#0B0B0B;color:#fff;font:16px system-ui;min-height:100vh;display:grid;place-items:center"><p id="notice">코치온으로 이동하는 중…</p>
+<script>(function(){'use strict';
+ const parts=location.pathname.split('/').filter(Boolean);
+ const isProject=parts.length>0&&!['new','c','apply','card'].includes(parts[0]);
+ const base=isProject?'/'+encodeURIComponent(parts[0])+'/':'/';
+ const rest=parts.slice(isProject?1:0).map(s=>{try{return decodeURIComponent(s)}catch(e){return ''}});
+ const route=rest[0],value=rest[1],q=new URLSearchParams(location.search);
+ const valid=(s)=>/^[A-Za-z0-9_-]+$/.test(s||'');
+ let folder='',key='';
+ if(route==='new'&&rest.length===1){folder='new';}
+ else if(route==='c'&&rest.length===2&&valid(value)){folder='m';key='c';}
+ else if(route==='apply'&&rest.length===2&&valid(value)){folder='m';key='a';}
+ else if(route==='card'&&rest.length===2&&valid(value)){folder='card';key='t';}
+ if(!folder){document.getElementById('notice').textContent='링크를 다시 받아 주세요';return;}
+ const target=new URL(base+folder+'/',location.origin);
+ if(key)target.searchParams.set(key,value);
+ // Forward only documented demo parameter, avoid accidental private query forwarding.
+ if(q.get('demo')==='1')target.searchParams.set('demo','1');
+ location.replace(target.href+location.hash);
+})();</script></body></html>
